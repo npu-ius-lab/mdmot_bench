@@ -12,14 +12,14 @@
 
 ### 1. 数据集概述
 
-本数据集针对**动态观测机二对三（2 Observers → 3 Targets）**的被动观测场景构建，模拟或采集观测平台持续运动、多目标同时存在条件下的视觉观测数据，适用于以下研究方向：
+本数据集针对动态观测机二对三（2 Observers → 3 Targets）的被动观测场景构建，模拟或采集观测平台持续运动、多目标同时存在条件下的视觉观测数据，适用于以下研究方向：
 
 - 被动定位（Angle-only Localization）
 - 多目标数据关联
 - 多目标跟踪（MOT）
 - 多平台协同感知与状态估计
 
-数据以**在线观测序列（streaming / time-sequential）**形式组织，强调时间连续性与跨平台一致性。具体下载链接为：[link](https://pan.baidu.com/s/1dEMe61BcntzswjDKO6Wnkw?pwd=mxmq )
+数据以在线观测序列（streaming / time-sequential）形式组织，强调时间连续性与跨平台一致性。具体下载链接为：[link](https://pan.baidu.com/s/1dEMe61BcntzswjDKO6Wnkw?pwd=mxmq )
 
 ---
 
