@@ -19,7 +19,7 @@
 - 多目标跟踪（MOT）
 - 多平台协同感知与状态估计
 
-数据以在线观测序列（streaming / time-sequential）形式组织，强调时间连续性与跨平台一致性。具体下载链接为：[link](https://pan.baidu.com/s/1dEMe61BcntzswjDKO6Wnkw?pwd=mxmq )
+数据以在线观测序列形式组织，强调时间连续性与跨平台一致性。具体下载链接为：[link](https://pan.baidu.com/s/1dEMe61BcntzswjDKO6Wnkw?pwd=mxmq )
 
 ---
 
