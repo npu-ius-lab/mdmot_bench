@@ -19,7 +19,7 @@
 - 多目标跟踪（MOT）
 - 多平台协同感知与状态估计
 
-数据以在线观测序列形式组织，强调时间连续性与跨平台一致性。具体下载链接为：[link](https://pan.baidu.com/s/1dEMe61BcntzswjDKO6Wnkw?pwd=mxmq )
+具体录制的rosbag的网盘下载链接为：[link](https://pan.baidu.com/s/1dEMe61BcntzswjDKO6Wnkw?pwd=mxmq )
 
 ---
 
@@ -68,7 +68,7 @@
 
 
 
-## 二、评估工具（Evaluation Tool）
+## 二、三维跟踪指标评估工具
 
 ### 2.1 工具概述
 
@@ -82,9 +82,6 @@
 
 评估工具采用扩展的 MOTChallenge 风格文本格式，每一行表示一个目标在某一帧的观测或跟踪结果：
 
-#### （1）三维点匹配格式（3D Points）
-
-在仅进行三维点匹配、不使用二维检测框的场景下，二维框字段置为无效值：
 ```
 <帧号>, <目标ID>, -1, -1, -1, -1, 1, x, y, z
 ```
@@ -92,19 +89,7 @@
 
 ---
 
-#### （2）二维目标框匹配格式（2D Bounding Boxes）
-
-在传统二维多目标跟踪评估场景下，采用标准检测框信息：
-```
-<帧号>, <目标ID>, <bb_left>, <bb_top>, <bb_width>, <bb_height>, -1, 1, -1, -1
-```
-此模式下三维位置信息不参与评估。
-
----
-
 ### 2.3 评估运行方式
-
-#### （1）三维点匹配评估
 
 针对三维点匹配场景，执行如下命令：
 
@@ -115,20 +100,17 @@ python3 scripts/run_mot_challenge.py \
     --BOUNDINGBOX False
 ```
 
-其中，`--BOUNDINGBOX False` 表示评估过程中不使用二维框重叠度，而基于三维空间中的欧氏距离进行匹配。
+其中，`--BOUNDINGBOX False` 表示评估过程中不使用二维框重叠度，而是基于三维空间中的欧氏距离进行匹配。如果是仅针对不同方法得到的数据，可以使用如下示例：
 
-------
-
-#### （2）二维目标框匹配评估
-
-针对二维目标框匹配场景，执行如下命令：
-
-```bash
+```
 cd TrackEval
 python3 scripts/run_mot_challenge.py \
-    --BENCHMARK your_dataset_name \
-    --BOUNDINGBOX True
+    --BENCHMARK air2air \
+    --BOUNDINGBOX False \
+    --SEQ_INFO 3d-target
 ```
+
+
 
 ------
 
