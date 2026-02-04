@@ -1,106 +1,174 @@
 # mdmot_bench
 
-本项目面向**分布式动态观测机条件下的被动定位与多目标跟踪研究**，提供一套可复现实验流程的**数据集规范**与**评估工具**实现，旨在支持多视角、多目标、动态平台场景下的数据关联、定位与跟踪算法评测。
+This project targets **passive localization and multi-target tracking research under distributed dynamic observer conditions**. It provides a **dataset specification** and an **evaluation toolkit** implementation to support reproducible experimental workflows, aiming to benchmark data association, localization, and tracking algorithms in multi-view, multi-target, and dynamic platform scenarios.
 
-项目主要包含两部分内容：
-- 动态观测机二对三和三对五的被动观测数据集
-- 多目标跟踪评估工具（基于 TrackEval 的定制改版）
+The project consists of two main components:
 
----
+- Passive observation datasets for 2 vs 3 and 3 vs 5 dynamic observers
+- Multi-target tracking evaluation toolkit (customized adaptation based on TrackEval)
 
-## 一、 二对三数据集
+------
 
-### 1. 数据集概述
+## Part I: 2 vs 3 Dataset
 
-本数据集针对动态观测机二对三（2 Observers → 3 Targets）的被动观测场景构建，模拟或采集观测平台持续运动、多目标同时存在条件下的视觉观测数据，适用于以下研究方向：
+### 1. Dataset Overview
 
-- 被动定位（Angle-only Localization）
-- 多目标数据关联
-- 多目标跟踪（MOT）
-- 多平台协同感知与状态估计
+This dataset is constructed for passive observation scenarios with **2 dynamic observers tracking 3 targets**. It simulates or collects visual observation data under conditions of continuous observer motion and multiple simultaneous targets, suitable for research in:
 
-具体录制的rosbag的网盘下载链接为：[link](https://pan.baidu.com/s/1dEMe61BcntzswjDKO6Wnkw?pwd=mxmq )
+- Passive localization (Angle-only Localization)
+- Multi-target data association
+- Multi-target tracking (MOT)
+- Multi-platform collaborative perception and state estimation
 
----
+The download link for the recorded ROS bags is: [link](https://pan.baidu.com/s/1dEMe61BcntzswjDKO6Wnkw?pwd=mxmq)
 
-### 2. 场景配置
+------
 
-- 观测机数量：2  
-- 目标数量：3  
-- 观测方式：被动视觉观测 
-- 观测机状态：动态运动  
-- 目标状态：动态运动
+### 2. Scenario Configuration
 
----
+- Number of observers: 2
+- Number of targets: 3
+- Observation method: Passive visual observation
+- Observer state: Dynamic motion
+- Target state: Dynamic motion
 
-### 3. 数据内容
+------
 
-每个数据序列原则上包含以下信息：
+### 3. Data Content
 
-- 图像数据：来自两架观测机的图像序列，支持 RGB格式
-- 目标位姿数据：目标机在世界坐标系下的位置与姿态
+Each data sequence typically contains the following information:
 
-- 观测机位姿数据：观测机在世界坐标系下的位置与姿态
+- Image data: Image sequences from two observers, supporting RGB format
+- Target pose data: Position and attitude of target aircraft in the world coordinate system
+- Observer pose data: Position and attitude of observer aircraft in the world coordinate system
 
----
+------
 
-### 4. ROS 话题结构
+### 4. ROS Topic Structure
 
-- 图像话题  
-  - `/obs_01/image_raw`  
+- Image topics
+  - `/obs_01/image_raw`
   - `/obs_02/image_raw`
-- 观测机位姿话题  
-  - `/vrpn_client_node/obs_01/pose`  
+- Observer pose topics
+  - `/vrpn_client_node/obs_01/pose`
   - `/vrpn_client_node/obs_02/pose`
-- 目标机位姿话题
+- Target pose topics
   - `/vrpn_client_node/target_01/pose`
   - `/vrpn_client_node/target_02/pose`
   - `/vrpn_client_node/target_03/pose`
 
+------
 
----
+### 5. Camera Parameters
 
-### 5. 相机参数
+Stored in `2_3-parameter.txt`
 
-存放到`2_3-parameter.txt`
+------
 
+## Part II: 3D Tracking Metrics Evaluation Toolkit
 
+### 2.1 Toolkit Overview
 
+This project uses a modified version of **TrackEval** for unified evaluation of multi-target tracking results, with custom extensions for 3D point matching scenarios, suitable for passive localization and multi-observer collaborative perception tasks.
 
+The evaluation framework supports multiple mainstream multi-target tracking metrics (including HOTA series metrics) and provides complete evaluation workflows, result statistics, and visualization functions. Through parameter configuration, it can simultaneously support both **3D point-level matching** and **2D bounding box matching** evaluation modes.
 
-## 二、三维跟踪指标评估工具
+------
 
-### 2.1 工具概述
+### 2.2 Data Format Specification
 
-本项目采用 **TrackEval** 的改版实现，用于多目标跟踪结果的统一评估，并针对**三维点匹配（3D Point Matching）**场景进行了定制扩展，适用于被动定位与多观测机协同感知任务。
-
-评估框架支持多种主流多目标跟踪评价指标（包括 HOTA 系列指标），并提供完整的评估流程、结果统计与可视化功能。同时，通过参数配置可同时兼容 **三维点级匹配** 与 **二维目标框匹配** 两类评估模式。
-
----
-
-### 2.2 数据格式说明
-
-评估工具采用扩展的 MOTChallenge 风格文本格式，每一行表示一个目标在某一帧的观测或跟踪结果：
+The evaluation toolkit uses an extended MOTChallenge-style text format, where each line represents an observation or tracking result of a target in a specific frame:
 
 ```
-<帧号>, <目标ID>, -1, -1, -1, -1, 1, x, y, z
+<frame_number>, <target_id>, -1, -1, -1, -1, 1, x, y, z
 ```
-其中 `<x>, <y>, <z>` 表示目标在世界坐标系或统一参考坐标系下的三维位置。
 
----
+Here `<x>, <y>, <z>`represent the 3D position of the target in the world coordinate system or a unified reference coordinate system.
 
-### 2.3 评估运行方式
+------
 
-针对三维点匹配场景，执行如下命令：
+### 2.3 Dataset Directory Structure and Preparation
 
-```bash
+#### (1) Ground Truth Data
+
+Create a new dataset folder under:
+
+```
+TrackEval/data/gt/mot_challenge/
+```
+
+Example:
+
+```
+TrackEval/data/gt/mot_challenge/mydata-train/
+```
+
+Each dataset folder contains multiple sequence subfolders, with the following structure:
+
+```
+my_sequence/
+├── gt/
+│   └── gt.txt
+└── seqinfo.ini
+```
+
+- `gt.txt`: Ground truth trajectory data for the corresponding sequence
+- `seqinfo.ini`: Sequence configuration information file
+
+The `seqinfo.ini`file must contain at least the following fields:
+
+- `name`: Dataset name
+- `frameRate`: Sequence frame rate
+- `seqLength`: Total number of frames in the sequence
+- `imWidth`: Image width (placeholder if not used)
+
+------
+
+#### (2) Tracking Results Data (Trackers)
+
+Create a folder with the same name as the ground truth dataset under:
+
+```
+TrackEval/data/trackers/mot_challenge/mydata-train/
+```
+
+Each subdirectory under this path corresponds to a tracking method to be evaluated. Example structure:
+
+```
+my_tracker/
+└── data/
+    └── your_dataset_name.txt
+```
+
+- `your_dataset_name.txt`: Tracking result file for this method on the specified dataset
+- After evaluation, metric statistics and visualization charts will be automatically generated in the corresponding subfolder
+
+------
+
+#### (3) Sequence Mapping Files (SeqMaps)
+
+Create sequence mapping files under:
+
+```
+TrackEval/data/gt/mot_challenge/seqmaps/
+```
+
+This file must list all sequence names included in the current evaluation according to the official TrackEval format.
+
+------
+
+### 2.4 Evaluation Execution
+
+For 3D point matching scenarios, execute the following command:
+
+```
 cd TrackEval
 python3 scripts/run_mot_challenge.py \
     --BENCHMARK your_dataset_name \
     --BOUNDINGBOX False
 ```
 
-其中，`--BOUNDINGBOX False` 表示评估过程中不使用二维框重叠度，而是基于三维空间中的欧氏距离进行匹配。如果是仅针对不同方法得到的数据，可以使用如下示例：
+Here, `--BOUNDINGBOX False`indicates that 2D bounding box overlap is not used during evaluation; instead, matching is based on Euclidean distance in 3D space. For evaluating data from different methods only, you can use the following example:
 
 ```
 cd TrackEval
@@ -110,91 +178,40 @@ python3 scripts/run_mot_challenge.py \
     --SEQ_INFO 3d-target
 ```
 
-
-
 ------
 
-### 2.4 数据集目录结构与准备说明
+### 2.5 Python / Conda Environment Dependencies
 
-#### （1）真值数据（Ground Truth）
-
-在如下路径下新建数据集文件夹：
+The evaluation toolkit depends on the following Python libraries:
 
 ```
-/data/gt/mot_challenge/
-```
-
-例如：
-
-```
-/data/gt/mot_challenge/mydata-train/
-```
-
-每个数据集文件夹中包含多个序列子文件夹，每个序列文件夹结构如下：
-
-```
-my_sequence/
-├── gt/
-│   └── gt.txt
-└── seqinfo.ini
-```
-
-- `gt.txt`：对应序列的真实轨迹数据
-- `seqinfo.ini`：序列配置信息文件
-
-其中 `seqinfo.ini` 需至少包含以下字段：
-
-- `name`：数据集名称
-- `frameRate`：序列帧率
-- `seqLength`：序列总帧数
-- `imWidth`：图像宽度（如不使用可占位）
-
-------
-
-#### （2）跟踪结果数据（Trackers）
-
-在如下路径中新建与真值数据集同名的文件夹：
-
-```
-/data/trackers/mot_challenge/mydata-train/
-```
-
-该目录下每个子文件夹对应一种待评估的跟踪方法，结构示例如下：
-
-```
-my_tracker/
-└── data/
-    └── your_dataset_name.txt
-```
-
-- `your_dataset_name.txt`：该方法在指定数据集上的跟踪结果文件
-- 评估完成后，指标统计结果与可视化图表将自动生成于对应子文件夹中
-
-------
-
-#### （3）序列映射文件（SeqMaps）
-
-在如下路径下新建序列映射文件：
-
-```
-/data/gt/mot_challenge/seqmaps/
-```
-
-该文件需按照 TrackEval 官方格式列出当前评估所包含的全部序列名称。
-
-------
-
-### 2.5 Python / Conda 环境依赖
-
-评估工具依赖以下 Python 库：
-
-```bash
 pip install pycocotools
 pip install scipy
 pip install tabulate
 ```
 
-建议使用 Python 3 运行环境。
+It is recommended to use a Python 3 runtime environment.
 
+------
 
+## Part III: Association Matching Accuracy Evaluation
 
+For easier data evaluation, relevant data from observers and targets have been organized by combining ROS bag topic subscription and 2D object trackers, and are stored in the following folder:
+
+```
+Processed_Data/2_3/
+```
+
+Among them, `target1.csv`, `target2.csv`, and `target3.csv`contain ground truth data for the corresponding targets:
+
+```
+<timestamp>,x,y,z
+```
+
+While `obs_01.csv`and `obs_02.csv`contain ground truth data for the corresponding observers:
+
+```
+<timestamp>, <aircraft_x>, <aircraft_y>, <aircraft_z>, <aircraft_qx>, <aircraft_qy>, <aircraft_qz>, <aircraft_qw>, <camera_x>, <camera_y>, <camera_z>, <camera_qx>, <camera_qy>, <camera_qz>, <camera_qw>, <target1_u>, <target1_v>, <target2_u>, <target2_v>, <target3_u>, <target3_v>
+```
+
+Association matching accuracy can be calculated by comparing the detection boxes and IDs after association matching with the actual detection positions and IDs.
