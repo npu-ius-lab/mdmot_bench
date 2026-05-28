@@ -215,3 +215,15 @@ While `obs_01.csv`and `obs_02.csv`contain ground truth data for the correspondin
 ```
 
 Association matching accuracy can be calculated by comparing the detection boxes and IDs after association matching with the actual detection positions and IDs.
+
+## Citation
+If you publish work based on, or using, this code, we would appreciate citations to the following:
+
+   @article{liao2025multi,
+       author={Liao, Xin and Fang, Bohui and Shao, Weiyu and Fu, Wenxing and Yang, Tao},
+       title={Multi-Object Tracking with Distributed Drones’ RGB Cameras Considering Object Localization Uncertainty},
+       journal={Drones},
+       volume={9},
+       number={12},
+       year={2025},
+       }
