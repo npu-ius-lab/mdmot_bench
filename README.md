@@ -9,7 +9,7 @@ The project consists of two main components:
 
 ------
 
-## Part I: 2 vs 3 Dataset
+## Part I-A: 2 vs 3 Dataset
 
 ### 1. Dataset Overview
 
