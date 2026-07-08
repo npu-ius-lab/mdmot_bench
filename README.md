@@ -65,6 +65,66 @@ Stored in `2_3-parameter.txt`
 
 ------
 
+## Part I-B: 3 vs 5 Dataset
+
+### 1. Dataset Overview
+
+This dataset is constructed for passive observation scenarios with **3 dynamic observers tracking 5 targets**. It simulates or collects visual observation data under conditions of continuous observer motion and multiple simultaneous targets, suitable for research in:
+
+- Passive localization (Angle-only Localization)
+- Multi-target data association
+- Multi-target tracking (MOT)
+- Multi-platform collaborative perception and state estimation
+
+The download link for the recorded ROS bags is: [link](https://pan.baidu.com/s/1dEMe61BcntzswjDKO6Wnkw?pwd=mxmq)
+
+------
+
+### 2. Scenario Configuration
+
+- Number of observers: 3
+- Number of targets: 5
+- Observation method: Passive visual observation
+- Observer state: Dynamic motion
+- Target state: Dynamic motion
+
+------
+
+### 3. Data Content
+
+Each data sequence typically contains the following information:
+
+- Image data: Image sequences from three observers, supporting RGB format
+- Target pose data: Position and attitude of target aircraft in the world coordinate system
+- Observer pose data: Position and attitude of observer aircraft in the world coordinate system
+
+------
+
+### 4. ROS Topic Structure
+
+- Image topics
+  - `/obs_01/image_raw`
+  - `/obs_02/image_raw`
+  - `/obs_03/image_raw`
+- Observer pose topics
+  - `/vrpn_client_node/obs_01/pose`
+  - `/vrpn_client_node/obs_02/pose`
+  - `/vrpn_client_node/obs_03/pose`
+- Target pose topics
+  - `/vrpn_client_node/target_01/pose`
+  - `/vrpn_client_node/target_02/pose`
+  - `/vrpn_client_node/target_03/pose`
+  - `/vrpn_client_node/target_04/pose`
+  - `/vrpn_client_node/target_05/pose`
+
+------
+
+### 5. Camera Parameters
+
+Stored in `3_5-parameter.txt` in the released dataset package
+
+------
+
 ## Part II: 3D Tracking Metrics Evaluation Toolkit
 
 ### 2.1 Toolkit Overview
@@ -200,18 +260,25 @@ For easier data evaluation, relevant data from observers and targets have been o
 
 ```
 Processed_Data/2_3/
+Processed_Data/3_5/
 ```
 
-Among them, `target1.csv`, `target2.csv`, and `target3.csv`contain ground truth data for the corresponding targets:
+Among them, `target1.csv`, `target2.csv`, and `target3.csv` in `Processed_Data/2_3/` contain ground truth data for the corresponding targets. In `Processed_Data/3_5/`, `target1.csv` to `target5.csv` contain ground truth data for the corresponding targets:
 
 ```
 <timestamp>,x,y,z
 ```
 
-While `obs_01.csv`and `obs_02.csv`contain ground truth data for the corresponding observers:
+While `obs_01.csv` and `obs_02.csv` in `Processed_Data/2_3/` contain observation data for the corresponding observers:
 
 ```
 <timestamp>, <aircraft_x>, <aircraft_y>, <aircraft_z>, <aircraft_qx>, <aircraft_qy>, <aircraft_qz>, <aircraft_qw>, <camera_x>, <camera_y>, <camera_z>, <camera_qx>, <camera_qy>, <camera_qz>, <camera_qw>, <target1_u>, <target1_v>, <target2_u>, <target2_v>, <target3_u>, <target3_v>
+```
+
+In `Processed_Data/3_5/`, `obs_01.csv` to `obs_03.csv` use the same observer format, extended to five target image points:
+
+```
+<timestamp>, <aircraft_x>, <aircraft_y>, <aircraft_z>, <aircraft_qx>, <aircraft_qy>, <aircraft_qz>, <aircraft_qw>, <camera_x>, <camera_y>, <camera_z>, <camera_qx>, <camera_qy>, <camera_qz>, <camera_qw>, <target1_u>, <target1_v>, <target2_u>, <target2_v>, <target3_u>, <target3_v>, <target4_u>, <target4_v>, <target5_u>, <target5_v>
 ```
 
 Association matching accuracy can be calculated by comparing the detection boxes and IDs after association matching with the actual detection positions and IDs.
