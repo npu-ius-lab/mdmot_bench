@@ -65,6 +65,84 @@
 存放到`2_3-parameter.txt`
 
 
+---
+
+## 一-B、三对五数据集
+
+### 1. 数据集概述
+
+本数据集针对动态观测机三对五（3 Observers → 5 Targets）的被动观测场景构建，包含三架动态载机对五个动态目标的被动视觉观测数据，适用于以下研究方向：
+
+- 被动定位（Angle-only Localization）
+- 多目标数据关联
+- 多目标跟踪（MOT）
+- 多平台协同感知与状态估计
+
+数据以在线观测序列（streaming / time-sequential）形式组织，强调多观测平台之间的时间连续性、跨视角一致性和多目标关联复杂性。ROS bag 数据已包含在开源数据的百度网盘中，下载链接为：[link](https://pan.baidu.com/s/1dEMe61BcntzswjDKO6Wnkw?pwd=mxmq)
+
+---
+
+### 2. 场景配置
+
+- 观测机数量：3
+- 目标数量：5
+- 观测方式：被动视觉观测
+- 观测机状态：动态运动
+- 目标状态：动态运动
+
+---
+
+### 3. 数据内容
+
+每个数据序列原则上包含以下信息：
+
+- 图像数据：来自三架观测机的图像序列，支持 RGB 格式
+- 目标位姿数据：目标机在世界坐标系下的位置与姿态
+- 观测机位姿数据：观测机在世界坐标系下的位置与姿态
+
+---
+
+### 4. ROS 话题结构
+
+- 图像话题
+  - `/obs_01/image_raw`
+  - `/obs_02/image_raw`
+  - `/obs_03/image_raw`
+- 观测机位姿话题
+  - `/vrpn_client_node/obs_01/pose`
+  - `/vrpn_client_node/obs_02/pose`
+  - `/vrpn_client_node/obs_03/pose`
+- 目标机位姿话题
+  - `/vrpn_client_node/target_01/pose`
+  - `/vrpn_client_node/target_02/pose`
+  - `/vrpn_client_node/target_03/pose`
+  - `/vrpn_client_node/target_04/pose`
+  - `/vrpn_client_node/target_05/pose`
+
+---
+
+### 5. 处理后数据
+
+三对五实验的处理后 CSV 数据存放在：
+
+```
+Processed_Data/3_5/
+```
+
+其中，`target1.csv` 至 `target5.csv` 为五个目标的三维真值数据，格式为：
+
+```
+<timestamp>,x,y,z
+```
+
+`obs_01.csv` 至 `obs_03.csv` 为三架载机的二维观测数据，包含载机位姿、相机外参和五个目标的图像平面观测点，格式为：
+
+```
+<timestamp>, <aircraft_x>, <aircraft_y>, <aircraft_z>, <aircraft_qx>, <aircraft_qy>, <aircraft_qz>, <aircraft_qw>, <camera_x>, <camera_y>, <camera_z>, <camera_qx>, <camera_qy>, <camera_qz>, <camera_qw>, <target1_u>, <target1_v>, <target2_u>, <target2_v>, <target3_u>, <target3_v>, <target4_u>, <target4_v>, <target5_u>, <target5_v>
+```
+
+缺失观测以 `-1` 表示。
+
 
 
 
@@ -222,5 +300,30 @@ pip install tabulate
 
 建议使用 Python 3 运行环境。
 
+## 引用
+
+如果你在论文或项目中使用本代码或数据集，请引用以下文献：
+
+```bibtex
+@article{liao2025drones,
+    author  = {Xin Liao and Bohui Fang and Weiyu Shao and Wenxing Fu and Tao Yang},
+    title   = {Multi-Object Tracking with Distributed Drones' RGB Cameras Considering Object Localization Uncertainty},
+    journal = {Drones},
+    year    = {2025},
+    volume  = {9},
+    number  = {12},
+    pages   = {867}
+}
+
+@article{zheng2026hybrid,
+    author  = {郑育行 and 邵维瑜 and 张通 and 符文星 and 符姝祺 and 杨韬},
+    title   = {混合特征驱动的多无人机多目标被动关联与跟踪（飞行器协同作战专栏）},
+    journal = {航空学报},
+    year    = {2026},
+    doi     = {10.7527/S1000-6893.2026.33485},
+    url     = {https://hkxb.buaa.edu.cn/CN/10.7527/S1000-6893.2026.33485},
+    note    = {网络首发日期: 2026-05-19}
+}
+```
 
 
